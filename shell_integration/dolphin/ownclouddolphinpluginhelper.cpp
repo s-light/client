@@ -59,7 +59,7 @@ void OwncloudDolphinPluginHelper::sendCommand(const char* data)
 
 void OwncloudDolphinPluginHelper::slotConnected()
 {
-    sendCommand("SHARE_MENU_TITLE:\n");
+    sendCommand("GET_STRINGS:\n");
 }
 
 void OwncloudDolphinPluginHelper::tryConnect()
@@ -73,6 +73,12 @@ void OwncloudDolphinPluginHelper::tryConnect()
 
     const QString socketPath = runtimeDir + QLatin1String("/socket");
     _socket.connectToServer(socketPath);
+}
+
+static QString getString(const QByteArray& line)
+{
+    auto col = line.lastIndexOf(':');
+    return QString::fromUtf8(line.constData() + col + 1, line.size() - col - 1);
 }
 
 void OwncloudDolphinPluginHelper::slotReadyRead()
@@ -92,9 +98,14 @@ void OwncloudDolphinPluginHelper::slotReadyRead()
             QString file = QString::fromUtf8(line.constData() + col + 1, line.size() - col - 1);
             _paths.append(file);
             continue;
-        } else if (line.startsWith("SHARE_MENU_TITLE:")) {
-            auto col = line.indexOf(':');
-            _shareActionString = QString::fromUtf8(line.constData() + col + 1, line.size() - col - 1);
+        } else if (line.startsWith("STRING:CONTEXT_MENU_TITLE:")) {
+            _contextMenuTitle = getString(line);
+            continue;
+        } else if (line.startsWith("STRING:SHARE_MENU_TITLE:")) {
+            _shareActionTitle = getString(line);
+            continue;
+        } else if (line.startsWith("STRING:COPY_LOCAL_LINK_TITLE:")) {
+            _copyLocalLinkTitle = getString(line);
             continue;
         }
         emit commandRecieved(line);

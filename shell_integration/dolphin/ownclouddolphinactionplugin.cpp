@@ -24,6 +24,7 @@
 #include <KIOCore/kfileitem.h>
 #include <KIOCore/KFileItemListProperties>
 #include <QtWidgets/QAction>
+#include <QtWidgets/QMenu>
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
 #include "ownclouddolphinpluginhelper.h"
@@ -53,12 +54,25 @@ public:
                         } ))
              return {};
 
-        auto act = new QAction(parentWidget);
-        act->setText(helper->shareActionString());
-        connect(act, &QAction::triggered, this, [localFile, helper] {
+        auto menuaction = new QAction(parentWidget);
+        menuaction->setText(helper->contextMenuTitle());
+        auto menu = new QMenu(parentWidget);
+        menuaction->setMenu(menu);
+
+        auto shareAction = new QAction(menu);
+        shareAction->setText(helper->shareActionTitle());
+        connect(shareAction, &QAction::triggered, this, [localFile, helper] {
             helper->sendCommand(QByteArray("SHARE:"+localFile.toUtf8()+"\n"));
         } );
-        return { act };
+        menu->addAction(shareAction);
+
+        auto localLinkAction = new QAction(menu);
+        localLinkAction->setText(helper->copyLocalLinkTitle());
+        connect(localLinkAction, &QAction::triggered, this, [localFile, helper] {
+            helper->sendCommand(QByteArray("COPY_LOCAL_LINK:"+localFile.toUtf8()+"\n"));
+        });
+        menu->addAction(localLinkAction);
+        return { menuaction };
     }
 
 };

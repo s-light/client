@@ -28,10 +28,13 @@ class OWNCLOUDDOLPHINPLUGINHELPER_EXPORT OwncloudDolphinPluginHelper : public QO
 public:
     static OwncloudDolphinPluginHelper *instance();
 
-    QString shareActionString() const { return _shareActionString; }
     bool isConnected() const;
     void sendCommand(const char *data);
     QVector<QString> paths() const { return _paths; }
+
+    QString contextMenuTitle() const { return _contextMenuTitle; }
+    QString shareActionTitle() const { return _shareActionTitle; }
+    QString copyLocalLinkTitle() const { return _copyLocalLinkTitle; }
 
 signals:
     void commandRecieved(const QByteArray &cmd);
@@ -47,6 +50,9 @@ private:
     QLocalSocket _socket;
     QByteArray _line;
     QVector<QString> _paths;
-    QString _shareActionString;
     QBasicTimer _connectTimer;
+
+    QString _contextMenuTitle;
+    QString _shareActionTitle;
+    QString _copyLocalLinkTitle;
 };
