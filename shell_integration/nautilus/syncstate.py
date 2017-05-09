@@ -95,6 +95,9 @@ class SocketConnect(GObject.GObject):
                 print("Setting connected to %r." % self.connected )
                 self._watch_id = GObject.io_add_watch(self._sock, GObject.IO_IN, self._handle_notify)
                 print("Socket watch id: " + str(self._watch_id))
+
+                self.sendCommand('GET_STRINGS:\n')
+
                 return False  # Don't run again
             except Exception as e:
                 print("Could not connect to unix socket. " + str(e))
@@ -153,6 +156,13 @@ class MenuExtension(GObject.GObject, Nautilus.MenuProvider):
     def __init__(self):
         GObject.GObject.__init__(self)
 
+        self.strings = {}
+        socketConnect.addListener(self.handle_commands)
+
+    def handle_commands(self, action, args):
+        if action == 'STRING':
+            self.strings[args[0]] = args[1]
+
     def check_registered_paths(self, filename):
         topLevelFolder = False
         internalFile = False
@@ -196,6 +206,19 @@ class MenuExtension(GObject.GObject, Nautilus.MenuProvider):
         if not entry:
             return items
 
+        # Set up the 'ownCloud...' submenu
+        item_owncloud = Nautilus.MenuItem(
+            name='IntegrationMenu', label=self.strings['CONTEXT_MENU_TITLE'])
+        menu = Nautilus.Menu()
+        item_owncloud.set_submenu(menu)
+        items.append(item_owncloud)
+
+        # Add permalink menu option
+        item_copylocallink = Nautilus.MenuItem(
+            name='CopyLocalLink', label=self.strings['COPY_LOCAL_LINK_TITLE'])
+        item_copylocallink.connect("activate", self.copy_local_link, file)
+        menu.append_item(item_copylocallink)
+
         shareable = False
         state = entry['state']
         state_ok = state.startswith('OK')
@@ -215,11 +238,11 @@ class MenuExtension(GObject.GObject, Nautilus.MenuProvider):
             return items
 
         # Create a menu item
-        labelStr = "Share with " + appname + "..."
-        item = Nautilus.MenuItem(name='NautilusPython::ShareItem', label=labelStr,
-                tip='Share file {} through {}'.format(file.get_name(), appname) )
+        item = Nautilus.MenuItem(
+            name='NautilusPython::ShareItem',
+            label=self.strings['SHARE_MENU_TITLE'])
         item.connect("activate", self.menu_share, file)
-        items.append(item)
+        menu.append_item(item)
 
         return items
 
@@ -228,6 +251,11 @@ class MenuExtension(GObject.GObject, Nautilus.MenuProvider):
         filename = get_local_path(file.get_uri())
         print("Share file " + filename)
         socketConnect.sendCommand("SHARE:" + filename + "\n")
+
+    def copy_local_link(self, menu, file):
+        filename = get_local_path(file.get_uri())
+        print("Copy local link " + filename)
+        socketConnect.sendCommand("COPY_LOCAL_LINK:" + filename + "\n")
 
 
 class SyncStateExtension(GObject.GObject, Nautilus.ColumnProvider, Nautilus.InfoProvider):
