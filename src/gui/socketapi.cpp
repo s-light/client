@@ -32,6 +32,7 @@
 #include "account.h"
 #include "capabilities.h"
 #include "asserts.h"
+#include "guiutility.h"
 
 #include <QBitArray>
 #include <QUrl>
@@ -44,6 +45,8 @@
 #include <QApplication>
 #include <QLocalSocket>
 #include <QStringBuilder>
+
+#include <QClipboard>
 
 #include <sqlite3.h>
 
@@ -512,6 +515,24 @@ void SocketApi::command_SHARE_STATUS(const QString &localFile, SocketListener *l
 void SocketApi::command_SHARE_MENU_TITLE(const QString &, SocketListener *listener)
 {
     listener->sendMessage(QLatin1String("SHARE_MENU_TITLE:") + tr("Share with %1", "parameter is ownCloud").arg(Theme::instance()->appNameGUI()));
+}
+
+void SocketApi::command_COPY_LOCAL_LINK(const QString &localFile, SocketListener*)
+{
+    qCInfo(lcSocketApi) << "Copy local link for" << localFile;
+    Folder *shareFolder = FolderMan::instance()->folderForPath(localFile);
+    if (!shareFolder) {
+        qCWarning(lcSocketApi) << "Unknown path" << localFile;
+        return;
+    }
+
+    const QString localFileClean = QDir::cleanPath(localFile);
+    const QString file = localFileClean.mid(shareFolder->cleanPath().length()+1);
+
+    SyncJournalFileRecord rec = shareFolder->journalDb()->getFileRecord(file);
+    if (rec.isValid()) {
+        Utility::copyToClipboard(shareFolder->accountState()->account()->filePermalinkUrl(rec._fileIdLocal).toString());
+    }
 }
 
 QString SocketApi::buildRegisterPathMessage(const QString &path)
