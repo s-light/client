@@ -535,6 +535,19 @@ void SocketApi::command_COPY_LOCAL_LINK(const QString &localFile, SocketListener
     }
 }
 
+void SocketApi::command_GET_STRINGS(const QString &, SocketListener *listener)
+{
+    static auto map = std::initializer_list<std::pair<const char*, QString>>{
+        {"SHARE_MENU_TITLE", tr("Share with %1...", "parameter is ownCloud").arg(Theme::instance()->appNameGUI())},
+        {"APPNAME", Theme::instance()->appNameGUI()},
+        {"CONTEXT_MENU_TITLE", Theme::instance()->appNameGUI()},
+        {"COPY_LOCAL_LINK_TITLE", tr("Copy local link to clipboard")}
+    };
+    for (auto key_value : map) {
+        listener->sendMessage(QString("STRING:%1:%2").arg(key_value.first, key_value.second));
+    }
+}
+
 QString SocketApi::buildRegisterPathMessage(const QString &path)
 {
     QFileInfo fi(path);
