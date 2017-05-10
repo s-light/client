@@ -19,6 +19,7 @@
 #include "capabilities.h"
 
 #include "sharemanager.h"
+#include "guiutility.h"
 
 #include "QProgressIndicator.h"
 #include <QBuffer>
@@ -494,20 +495,6 @@ void ShareLinkWidget::slotCheckBoxExpireClicked()
     }
 }
 
-#ifdef Q_OS_MAC
-extern void copyToPasteboard(const QString &string);
-#endif
-
-void ShareLinkWidget::copyShareLink(const QUrl &url)
-{
-#ifdef Q_OS_MAC
-    copyToPasteboard(url.toString());
-#else
-    QClipboard *clipboard = QApplication::clipboard();
-    clipboard->setText(url.toString());
-#endif
-}
-
 void ShareLinkWidget::emailShareLink(const QUrl &url)
 {
     QString fileName = _sharePath.mid(_sharePath.lastIndexOf('/') + 1);
@@ -546,9 +533,9 @@ void ShareLinkWidget::slotShareLinkButtonTriggered(QAction *action)
     auto share = sender()->property(propertyShareC).value<QSharedPointer<LinkShare>>();
 
     if (action == _copyLinkAction) {
-        copyShareLink(share->getLink());
+        Utility::copyToClipboard(share->getLink().toString());
     } else if (action == _copyDirectLinkAction) {
-        copyShareLink(share->getDirectDownloadLink());
+        Utility::copyToClipboard((share->getDirectDownloadLink().toString()));
     } else if (action == _emailLinkAction) {
         emailShareLink(share->getLink());
     } else if (action == _emailDirectLinkAction) {

@@ -91,6 +91,7 @@ set(client_SRCS
     notificationwidget.cpp
     notificationconfirmjob.cpp
     servernotificationhandler.cpp
+    guiutility.cpp
     creds/credentialsfactory.cpp
     creds/httpcredentialsgui.cpp
     wizard/postfixlineedit.cpp
