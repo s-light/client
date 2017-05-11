@@ -16,6 +16,8 @@
 
 #include <QClipboard>
 #include <QApplication>
+#include <QDesktopServices>
+#include <QMessageBox>
 
 using namespace OCC;
 
@@ -32,4 +34,40 @@ void Utility::copyToClipboard(const QString& string)
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(string);
 #endif
+}
+
+bool Utility::openBrowser(const QUrl& url, QWidget* errorWidgetParent)
+{
+    if (!QDesktopServices::openUrl(url) && errorWidgetParent) {
+        QMessageBox::warning(
+            errorWidgetParent,
+            QCoreApplication::translate("utility", "Could not open browser"),
+            QCoreApplication::translate("utility",
+                "There was an error when launching the browser to "
+                "view the public link share. Maybe no default browser is "
+                "configured?"));
+        return false;
+    }
+    return true;
+}
+
+bool Utility::openEmailComposer(const QString& subject, const QString& body, QWidget* errorWidgetParent)
+{
+    QUrl url(QLatin1String("mailto: "));
+    url.setQueryItems({
+        {QLatin1String("subject"), subject},
+        {QLatin1String("body"), body}
+    });
+
+    if (!QDesktopServices::openUrl(url) && errorWidgetParent) {
+        QMessageBox::warning(
+            errorWidgetParent,
+            QCoreApplication::translate("utility", "Could not open email client"),
+            QCoreApplication::translate("utility",
+                "There was an error when launching the email client to "
+                "create a new message. Maybe no default email client is "
+                "configured?"));
+        return false;
+    }
+    return true;
 }

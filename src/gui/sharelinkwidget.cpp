@@ -498,34 +498,15 @@ void ShareLinkWidget::slotCheckBoxExpireClicked()
 void ShareLinkWidget::emailShareLink(const QUrl &url)
 {
     QString fileName = _sharePath.mid(_sharePath.lastIndexOf('/') + 1);
-
-    if (!QDesktopServices::openUrl(QUrl(QString(
-                                            "mailto: "
-                                            "?subject=I shared %1 with you"
-                                            "&body=%2")
-                                            .arg(
-                                                fileName,
-                                                url.toString()),
-            QUrl::TolerantMode))) {
-        QMessageBox::warning(
-            this,
-            tr("Could not open email client"),
-            tr("There was an error when launching the email client to "
-               "create a new message. Maybe no default email client is "
-               "configured?"));
-    }
+    Utility::openEmailComposer(
+            QString("I shared %1 with you").arg(fileName),
+            url.toString(),
+            this);
 }
 
 void ShareLinkWidget::openShareLink(const QUrl &url)
 {
-    if (!QDesktopServices::openUrl(url)) {
-        QMessageBox::warning(
-            this,
-            tr("Could not open browser"),
-            tr("There was an error when launching the browser to "
-               "view the public link share. Maybe no default browser is "
-               "configured?"));
-    }
+    Utility::openBrowser(url, this);
 }
 
 void ShareLinkWidget::slotShareLinkButtonTriggered(QAction *action)

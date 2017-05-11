@@ -55,8 +55,7 @@ public slots:
     void slotRegisterPath(const QString &alias);
 
 signals:
-    void shareCommandReceived(const QString &sharePath, const QString &localPath, bool resharingAllowed);
-    void shareUserGroupCommandReceived(const QString &sharePath, const QString &localPath, bool resharingAllowed);
+    void shareCommandReceived(const QString &sharePath, const QString &localPath);
 
 private slots:
     void slotNewConnection();

@@ -43,6 +43,7 @@ public:
         const QString &sharePath,
         const QString &localPath,
         SharePermissions maxSharingPermissions,
+        const QByteArray &fileIdLocal,
         QWidget *parent = 0);
     ~ShareDialog();
 
@@ -60,8 +61,8 @@ private:
     QPointer<AccountState> _accountState;
     QString _sharePath;
     QString _localPath;
-
     SharePermissions _maxSharingPermissions;
+    QByteArray _fileIdLocal;
 
     ShareLinkWidget *_linkWidget;
     ShareUserGroupWidget *_userGroupWidget;

@@ -439,19 +439,10 @@ void SocketApi::command_SHARE(const QString &localFile, SocketListener *listener
             return;
         }
 
-        SyncJournalFileRecord rec = shareFolder->journalDb()->getFileRecord(localFileClean);
-
-        bool allowReshare = true; // lets assume the good
-        if (rec.isValid()) {
-            // check the permission: Is resharing allowed?
-            if (!rec._remotePerm.contains('R')) {
-                allowReshare = false;
-            }
-        }
         const QString message = QLatin1String("SHARE:OK:") + QDir::toNativeSeparators(localFile);
         listener->sendMessage(message);
 
-        emit shareCommandReceived(remotePath, localFileClean, allowReshare);
+        emit shareCommandReceived(remotePath, localFileClean);
     }
 }
 
