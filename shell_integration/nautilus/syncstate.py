@@ -188,7 +188,6 @@ class MenuExtension(GObject.GObject, Nautilus.MenuProvider):
         if len(files) != 1:
             return
         file = files[0]
-        items = []
 
         filename = get_local_path(file.get_uri())
         # Check if its a folder (ends with an /), if yes add a "/"
@@ -200,25 +199,14 @@ class MenuExtension(GObject.GObject, Nautilus.MenuProvider):
         # Check if toplevel folder, we need to ignore those as they cannot be shared
         topLevelFolder, internalFile = self.check_registered_paths(filename)
         if topLevelFolder or not internalFile:
-            return items
+            return []
 
         entry = socketConnect.nautilusVFSFile_table.get(filename)
         if not entry:
-            return items
+            return []
 
-        # Set up the 'ownCloud...' submenu
-        item_owncloud = Nautilus.MenuItem(
-            name='IntegrationMenu', label=self.strings['CONTEXT_MENU_TITLE'])
-        menu = Nautilus.Menu()
-        item_owncloud.set_submenu(menu)
-        items.append(item_owncloud)
-
-        # Add permalink menu option
-        item_copylocallink = Nautilus.MenuItem(
-            name='CopyLocalLink', label=self.strings['COPY_LOCAL_LINK_TITLE'])
-        item_copylocallink.connect("activate", self.copy_local_link, file)
-        menu.append_item(item_copylocallink)
-
+        # Currently 'sharable' also controls access to local link actions,
+        # and we definitely don't want to show them for IGNORED.
         shareable = False
         state = entry['state']
         state_ok = state.startswith('OK')
@@ -235,27 +223,42 @@ class MenuExtension(GObject.GObject, Nautilus.MenuProvider):
                         break
 
         if not shareable:
-            return items
+            return []
 
-        # Create a menu item
+        # Set up the 'ownCloud...' submenu
+        item_owncloud = Nautilus.MenuItem(
+            name='IntegrationMenu', label=self.strings.get('CONTEXT_MENU_TITLE', appname))
+        menu = Nautilus.Menu()
+        item_owncloud.set_submenu(menu)
+
+        # Add share menu option
         item = Nautilus.MenuItem(
             name='NautilusPython::ShareItem',
-            label=self.strings['SHARE_MENU_TITLE'])
-        item.connect("activate", self.menu_share, file)
+            label=self.strings.get('SHARE_MENU_TITLE', 'Share...'))
+        item.connect("activate", self.context_menu_action, 'SHARE', file)
         menu.append_item(item)
 
-        return items
+        # Add permalink menu options, but hide these options for older clients
+        # that don't have these actions.
+        if 'COPY_LOCAL_LINK_TITLE' in self.strings:
+            item_copylocallink = Nautilus.MenuItem(
+                name='CopyLocalLink', label=self.strings.get('COPY_LOCAL_LINK_TITLE', 'Copy local link to clipboard'))
+            item_copylocallink.connect("activate", self.context_menu_action, 'COPY_LOCAL_LINK', file)
+            menu.append_item(item_copylocallink)
+
+        if 'EMAIL_LOCAL_LINK_TITLE' in self.strings:
+            item_emaillocallink = Nautilus.MenuItem(
+                name='EmailLocalLink', label=self.strings.get('EMAIL_LOCAL_LINK_TITLE', 'Send local link by email...'))
+            item_emaillocallink.connect("activate", self.context_menu_action, 'EMAIL_LOCAL_LINK', file)
+            menu.append_item(item_emaillocallink)
+
+        return [item_owncloud]
 
 
-    def menu_share(self, menu, file):
+    def context_menu_action(self, menu, action, file):
         filename = get_local_path(file.get_uri())
-        print("Share file " + filename)
-        socketConnect.sendCommand("SHARE:" + filename + "\n")
-
-    def copy_local_link(self, menu, file):
-        filename = get_local_path(file.get_uri())
-        print("Copy local link " + filename)
-        socketConnect.sendCommand("COPY_LOCAL_LINK:" + filename + "\n")
+        print("Context menu: " + action + ' ' + filename)
+        socketConnect.sendCommand(action + ":" + filename + "\n")
 
 
 class SyncStateExtension(GObject.GObject, Nautilus.ColumnProvider, Nautilus.InfoProvider):
