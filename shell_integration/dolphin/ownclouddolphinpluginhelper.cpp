@@ -75,12 +75,6 @@ void OwncloudDolphinPluginHelper::tryConnect()
     _socket.connectToServer(socketPath);
 }
 
-static QString getString(const QByteArray& line)
-{
-    auto col = line.lastIndexOf(':');
-    return QString::fromUtf8(line.constData() + col + 1, line.size() - col - 1);
-}
-
 void OwncloudDolphinPluginHelper::slotReadyRead()
 {
     while (_socket.bytesAvailable()) {
@@ -98,14 +92,11 @@ void OwncloudDolphinPluginHelper::slotReadyRead()
             QString file = QString::fromUtf8(line.constData() + col + 1, line.size() - col - 1);
             _paths.append(file);
             continue;
-        } else if (line.startsWith("STRING:CONTEXT_MENU_TITLE:")) {
-            _contextMenuTitle = getString(line);
-            continue;
-        } else if (line.startsWith("STRING:SHARE_MENU_TITLE:")) {
-            _shareActionTitle = getString(line);
-            continue;
-        } else if (line.startsWith("STRING:COPY_LOCAL_LINK_TITLE:")) {
-            _copyLocalLinkTitle = getString(line);
+        } else if (line.startsWith("STRING:")) {
+            auto args = QString::fromUtf8(line).split(QLatin1Char(':'));
+            if (args.size() == 3) {
+                _strings[args[1]] = args[2];
+            }
             continue;
         }
         emit commandRecieved(line);

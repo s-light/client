@@ -59,19 +59,25 @@ public:
         auto menu = new QMenu(parentWidget);
         menuaction->setMenu(menu);
 
-        auto shareAction = new QAction(menu);
-        shareAction->setText(helper->shareActionTitle());
+        auto shareAction = menu->addAction(helper->shareActionTitle());
         connect(shareAction, &QAction::triggered, this, [localFile, helper] {
             helper->sendCommand(QByteArray("SHARE:"+localFile.toUtf8()+"\n"));
         } );
-        menu->addAction(shareAction);
 
-        auto localLinkAction = new QAction(menu);
-        localLinkAction->setText(helper->copyLocalLinkTitle());
-        connect(localLinkAction, &QAction::triggered, this, [localFile, helper] {
-            helper->sendCommand(QByteArray("COPY_LOCAL_LINK:"+localFile.toUtf8()+"\n"));
-        });
-        menu->addAction(localLinkAction);
+        if (!helper->contextMenuTitle().isEmpty()) {
+            auto copyLocalLinkAction = menu->addAction(helper->copyLocalLinkTitle());
+            connect(copyLocalLinkAction, &QAction::triggered, this, [localFile, helper] {
+                helper->sendCommand(QByteArray("COPY_LOCAL_LINK:"+localFile.toUtf8()+"\n"));
+            });
+        }
+
+        if (!helper->emailLocalLinkTitle().isEmpty()) {
+            auto emailLocalLinkAction = menu->addAction(helper->emailLocalLinkTitle());
+            connect(emailLocalLinkAction, &QAction::triggered, this, [localFile, helper] {
+                helper->sendCommand(QByteArray("EMAIL_LOCAL_LINK:"+localFile.toUtf8()+"\n"));
+            });
+        }
+
         return { menuaction };
     }
 

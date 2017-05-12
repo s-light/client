@@ -32,9 +32,17 @@ public:
     void sendCommand(const char *data);
     QVector<QString> paths() const { return _paths; }
 
-    QString contextMenuTitle() const { return _contextMenuTitle; }
-    QString shareActionTitle() const { return _shareActionTitle; }
-    QString copyLocalLinkTitle() const { return _copyLocalLinkTitle; }
+    QString contextMenuTitle() const
+    {
+        return _strings.value("CONTEXT_MENU_TITLE", "ownCloud");
+    }
+    QString shareActionTitle() const
+    {
+        return _strings.value("SHARE_MENU_TITLE", "Share...");
+    }
+
+    QString copyLocalLinkTitle() const { return _strings["COPY_LOCAL_LINK_TITLE"]; }
+    QString emailLocalLinkTitle() const { return _strings["EMAIL_LOCAL_LINK_TITLE"]; }
 
 signals:
     void commandRecieved(const QByteArray &cmd);
@@ -52,7 +60,5 @@ private:
     QVector<QString> _paths;
     QBasicTimer _connectTimer;
 
-    QString _contextMenuTitle;
-    QString _shareActionTitle;
-    QString _copyLocalLinkTitle;
+    QMap<QString, QString> _strings;
 };
