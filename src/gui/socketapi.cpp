@@ -510,19 +510,20 @@ void SocketApi::command_SHARE_MENU_TITLE(const QString &, SocketListener *listen
 
 void SocketApi::command_COPY_LOCAL_LINK(const QString &localFile, SocketListener*)
 {
-    qCInfo(lcSocketApi) << "Copy local link for" << localFile;
-    Folder *shareFolder = FolderMan::instance()->folderForPath(localFile);
-    if (!shareFolder) {
-        qCWarning(lcSocketApi) << "Unknown path" << localFile;
-        return;
+    auto url = getLocalLinkUrl(localFile);
+    if (!url.isEmpty()) {
+        Utility::copyToClipboard(url.toString());
     }
+}
 
-    const QString localFileClean = QDir::cleanPath(localFile);
-    const QString file = localFileClean.mid(shareFolder->cleanPath().length()+1);
-
-    SyncJournalFileRecord rec = shareFolder->journalDb()->getFileRecord(file);
-    if (rec.isValid()) {
-        Utility::copyToClipboard(shareFolder->accountState()->account()->filePermalinkUrl(rec._fileIdLocal).toString());
+void SocketApi::command_EMAIL_LOCAL_LINK(const QString &localFile, SocketListener *)
+{
+    auto url = getLocalLinkUrl(localFile);
+    if (!url.isEmpty()) {
+        Utility::openEmailComposer(
+                tr("I shared something with you"),
+                url.toString(),
+                0);
     }
 }
 
@@ -532,7 +533,8 @@ void SocketApi::command_GET_STRINGS(const QString &, SocketListener *listener)
         {"SHARE_MENU_TITLE", tr("Share with %1...", "parameter is ownCloud").arg(Theme::instance()->appNameGUI())},
         {"APPNAME", Theme::instance()->appNameGUI()},
         {"CONTEXT_MENU_TITLE", Theme::instance()->appNameGUI()},
-        {"COPY_LOCAL_LINK_TITLE", tr("Copy local link to clipboard")}
+        {"COPY_LOCAL_LINK_TITLE", tr("Copy local link to clipboard")},
+        {"EMAIL_LOCAL_LINK_TITLE", tr("Send local link by email...")},
     };
     for (auto key_value : map) {
         listener->sendMessage(QString("STRING:%1:%2").arg(key_value.first, key_value.second));
@@ -545,6 +547,24 @@ QString SocketApi::buildRegisterPathMessage(const QString &path)
     QString message = QLatin1String("REGISTER_PATH:");
     message.append(QDir::toNativeSeparators(fi.absoluteFilePath()));
     return message;
+}
+
+QUrl SocketApi::getLocalLinkUrl(const QString &localFile) const
+{
+    Folder *shareFolder = FolderMan::instance()->folderForPath(localFile);
+    if (!shareFolder) {
+        qCWarning(lcSocketApi) << "Unknown path" << localFile;
+        return QUrl();
+    }
+
+    const QString localFileClean = QDir::cleanPath(localFile);
+    const QString file = localFileClean.mid(shareFolder->cleanPath().length()+1);
+
+    SyncJournalFileRecord rec = shareFolder->journalDb()->getFileRecord(file);
+    if (rec.isValid()) {
+        return shareFolder->accountState()->account()->filePermalinkUrl(rec._fileIdLocal);
+    }
+    return QUrl();
 }
 
 } // namespace OCC

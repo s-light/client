@@ -334,7 +334,7 @@ void ShareUserGroupWidget::slotLocalLinkCopy()
 void ShareUserGroupWidget::slotLocalLinkEmail()
 {
     Utility::openEmailComposer(
-            QString("I shared something with you"),
+            tr("I shared something with you"),
             _account->filePermalinkUrl(_fileIdLocal).toString(),
             this);
 }
