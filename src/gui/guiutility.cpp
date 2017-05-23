@@ -21,21 +21,6 @@
 
 using namespace OCC;
 
-#ifdef Q_OS_MAC
-// Defined in clipboard.mm
-extern void copyToPasteboard(const QString &string);
-#endif
-
-void Utility::copyToClipboard(const QString& string)
-{
-#ifdef Q_OS_MAC
-    copyToPasteboard(string);
-#else
-    QClipboard *clipboard = QApplication::clipboard();
-    clipboard->setText(string);
-#endif
-}
-
 bool Utility::openBrowser(const QUrl& url, QWidget* errorWidgetParent)
 {
     if (!QDesktopServices::openUrl(url) && errorWidgetParent) {

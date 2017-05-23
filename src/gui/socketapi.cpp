@@ -512,7 +512,7 @@ void SocketApi::command_COPY_LOCAL_LINK(const QString &localFile, SocketListener
 {
     auto url = getLocalLinkUrl(localFile);
     if (!url.isEmpty()) {
-        Utility::copyToClipboard(url.toString());
+        QApplication::clipboard()->setText(url.toString());
     }
 }
 

@@ -328,7 +328,7 @@ void ShareUserGroupWidget::slotLocalLinkOpenBrowser()
 
 void ShareUserGroupWidget::slotLocalLinkCopy()
 {
-    Utility::copyToClipboard(_account->filePermalinkUrl(_fileIdLocal).toString());
+    QApplication::clipboard()->setText(_account->filePermalinkUrl(_fileIdLocal).toString());
 }
 
 void ShareUserGroupWidget::slotLocalLinkEmail()

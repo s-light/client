@@ -125,7 +125,6 @@ IF( APPLE )
     list(APPEND client_SRCS settingsdialogmac.cpp)
     list(APPEND client_SRCS socketapisocket_mac.mm)
     list(APPEND client_SRCS systray.mm)
-    list(APPEND client_SRCS clipboard.mm)
 
     if(SPARKLE_FOUND)
        # Define this, we need to check in updater.cpp

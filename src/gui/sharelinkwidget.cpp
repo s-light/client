@@ -514,9 +514,9 @@ void ShareLinkWidget::slotShareLinkButtonTriggered(QAction *action)
     auto share = sender()->property(propertyShareC).value<QSharedPointer<LinkShare>>();
 
     if (action == _copyLinkAction) {
-        Utility::copyToClipboard(share->getLink().toString());
+        QApplication::clipboard()->setText(share->getLink().toString());
     } else if (action == _copyDirectLinkAction) {
-        Utility::copyToClipboard((share->getDirectDownloadLink().toString()));
+        QApplication::clipboard()->setText(share->getDirectDownloadLink().toString());
     } else if (action == _emailLinkAction) {
         emailShareLink(share->getLink());
     } else if (action == _emailDirectLinkAction) {

@@ -24,13 +24,6 @@ namespace OCC
 namespace Utility
 {
 
-/** Copies a string to the clipboard.
- *
- * Includes a workaround for
- * https://github.com/owncloud/client/issues/3300
- */
-void copyToClipboard(const QString& string);
-
 /** Open an url in the browser.
  *
  * If launching the browser fails, display a message.
