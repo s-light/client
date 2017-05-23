@@ -94,8 +94,8 @@ void OwncloudDolphinPluginHelper::slotReadyRead()
             continue;
         } else if (line.startsWith("STRING:")) {
             auto args = QString::fromUtf8(line).split(QLatin1Char(':'));
-            if (args.size() == 3) {
-                _strings[args[1]] = args[2];
+            if (args.size() >= 3) {
+                _strings[args[1]] = args.mid(2).join(QLatin1Char(':'));
             }
             continue;
         }

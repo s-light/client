@@ -508,7 +508,7 @@ void SocketApi::command_SHARE_MENU_TITLE(const QString &, SocketListener *listen
     listener->sendMessage(QLatin1String("SHARE_MENU_TITLE:") + tr("Share with %1", "parameter is ownCloud").arg(Theme::instance()->appNameGUI()));
 }
 
-void SocketApi::command_COPY_LOCAL_LINK(const QString &localFile, SocketListener*)
+void SocketApi::command_COPY_LOCAL_LINK(const QString &localFile, SocketListener *)
 {
     auto url = getLocalLinkUrl(localFile);
     if (!url.isEmpty()) {
@@ -521,20 +521,20 @@ void SocketApi::command_EMAIL_LOCAL_LINK(const QString &localFile, SocketListene
     auto url = getLocalLinkUrl(localFile);
     if (!url.isEmpty()) {
         Utility::openEmailComposer(
-                tr("I shared something with you"),
-                url.toString(),
-                0);
+            tr("I shared something with you"),
+            url.toString(),
+            0);
     }
 }
 
 void SocketApi::command_GET_STRINGS(const QString &, SocketListener *listener)
 {
-    static auto map = std::initializer_list<std::pair<const char*, QString>>{
-        {"SHARE_MENU_TITLE", tr("Share with %1...", "parameter is ownCloud").arg(Theme::instance()->appNameGUI())},
-        {"APPNAME", Theme::instance()->appNameGUI()},
-        {"CONTEXT_MENU_TITLE", Theme::instance()->appNameGUI()},
-        {"COPY_LOCAL_LINK_TITLE", tr("Copy local link to clipboard")},
-        {"EMAIL_LOCAL_LINK_TITLE", tr("Send local link by email...")},
+    static auto map = std::initializer_list<std::pair<const char *, QString>>{
+        { "SHARE_MENU_TITLE", tr("Share with %1...", "parameter is ownCloud").arg(Theme::instance()->appNameGUI()) },
+        { "APPNAME", Theme::instance()->appNameGUI() },
+        { "CONTEXT_MENU_TITLE", Theme::instance()->appNameGUI() },
+        { "COPY_LOCAL_LINK_TITLE", tr("Copy local link to clipboard") },
+        { "EMAIL_LOCAL_LINK_TITLE", tr("Send local link by email...") },
     };
     for (auto key_value : map) {
         listener->sendMessage(QString("STRING:%1:%2").arg(key_value.first, key_value.second));
@@ -558,7 +558,7 @@ QUrl SocketApi::getLocalLinkUrl(const QString &localFile) const
     }
 
     const QString localFileClean = QDir::cleanPath(localFile);
-    const QString file = localFileClean.mid(shareFolder->cleanPath().length()+1);
+    const QString file = localFileClean.mid(shareFolder->cleanPath().length() + 1);
 
     SyncJournalFileRecord rec = shareFolder->journalDb()->getFileRecord(file);
     if (rec.isValid()) {

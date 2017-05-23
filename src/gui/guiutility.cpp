@@ -21,28 +21,26 @@
 
 using namespace OCC;
 
-bool Utility::openBrowser(const QUrl& url, QWidget* errorWidgetParent)
+bool Utility::openBrowser(const QUrl &url, QWidget *errorWidgetParent)
 {
     if (!QDesktopServices::openUrl(url) && errorWidgetParent) {
         QMessageBox::warning(
             errorWidgetParent,
             QCoreApplication::translate("utility", "Could not open browser"),
             QCoreApplication::translate("utility",
-                "There was an error when launching the browser to "
-                "view the public link share. Maybe no default browser is "
-                "configured?"));
+                "There was an error when launching the browser to go to "
+                "URL %1. Maybe no default browser is configured?")
+                .arg(url.toString()));
         return false;
     }
     return true;
 }
 
-bool Utility::openEmailComposer(const QString& subject, const QString& body, QWidget* errorWidgetParent)
+bool Utility::openEmailComposer(const QString &subject, const QString &body, QWidget *errorWidgetParent)
 {
     QUrl url(QLatin1String("mailto: "));
-    url.setQueryItems({
-        {QLatin1String("subject"), subject},
-        {QLatin1String("body"), body}
-    });
+    url.setQueryItems({ { QLatin1String("subject"), subject },
+        { QLatin1String("body"), body } });
 
     if (!QDesktopServices::openUrl(url) && errorWidgetParent) {
         QMessageBox::warning(

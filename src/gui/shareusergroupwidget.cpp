@@ -233,11 +233,11 @@ void ShareUserGroupWidget::slotLocalLinkShare()
     menu->setAttribute(Qt::WA_DeleteOnClose);
 
     menu->addAction(tr("Open link in browser"),
-                    this, SLOT(slotLocalLinkOpenBrowser()));
+        this, SLOT(slotLocalLinkOpenBrowser()));
     menu->addAction(tr("Copy link to clipboard"),
-                    this, SLOT(slotLocalLinkCopy()));
+        this, SLOT(slotLocalLinkCopy()));
     menu->addAction(tr("Send link by email"),
-                    this, SLOT(slotLocalLinkEmail()));
+        this, SLOT(slotLocalLinkEmail()));
 
     menu->exec(QCursor::pos());
 }
@@ -334,9 +334,9 @@ void ShareUserGroupWidget::slotLocalLinkCopy()
 void ShareUserGroupWidget::slotLocalLinkEmail()
 {
     Utility::openEmailComposer(
-            tr("I shared something with you"),
-            _account->filePermalinkUrl(_fileIdLocal).toString(),
-            this);
+        tr("I shared something with you"),
+        _account->filePermalinkUrl(_fileIdLocal).toString(),
+        this);
 }
 
 ShareUserLine::ShareUserLine(QSharedPointer<Share> share,

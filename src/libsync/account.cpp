@@ -160,9 +160,10 @@ QUrl Account::davUrl() const
     return Utility::concatUrlPath(url(), davPath());
 }
 
-QUrl Account::filePermalinkUrl(const QByteArray& fileIdLocal) const
+QUrl Account::filePermalinkUrl(const QByteArray &fileIdLocal) const
 {
-    return Utility::concatUrlPath(url(), QLatin1String("/index.php/f/") + QString::fromLatin1(fileIdLocal));
+    return Utility::concatUrlPath(url(),
+        QLatin1String("/index.php/f/") + QUrl::toPercentEncoding(QString::fromLatin1(fileIdLocal)));
 }
 
 /**

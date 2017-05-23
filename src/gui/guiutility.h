@@ -19,23 +19,21 @@
 #include <QUrl>
 #include <QWidget>
 
-namespace OCC
-{
-namespace Utility
-{
+namespace OCC {
+namespace Utility {
 
-/** Open an url in the browser.
- *
- * If launching the browser fails, display a message.
- */
-bool openBrowser(const QUrl& url, QWidget* errorWidgetParent);
+    /** Open an url in the browser.
+     *
+     * If launching the browser fails, display a message.
+     */
+    bool openBrowser(const QUrl &url, QWidget *errorWidgetParent);
 
-/** Start composing a new email message.
- *
- * If launching the email program fails, display a message.
- */
-bool openEmailComposer(const QString& subject, const QString& body,
-                       QWidget* errorWidgetParent);
+    /** Start composing a new email message.
+     *
+     * If launching the email program fails, display a message.
+     */
+    bool openEmailComposer(const QString &subject, const QString &body,
+        QWidget *errorWidgetParent);
 
 } // namespace Utility
 } // namespace OCC

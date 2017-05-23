@@ -161,7 +161,7 @@ class MenuExtension(GObject.GObject, Nautilus.MenuProvider):
 
     def handle_commands(self, action, args):
         if action == 'STRING':
-            self.strings[args[0]] = args[1]
+            self.strings[args[0]] = ':'.join(args[1:])
 
     def check_registered_paths(self, filename):
         topLevelFolder = False
