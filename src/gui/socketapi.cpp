@@ -508,17 +508,17 @@ void SocketApi::command_SHARE_MENU_TITLE(const QString &, SocketListener *listen
     listener->sendMessage(QLatin1String("SHARE_MENU_TITLE:") + tr("Share with %1", "parameter is ownCloud").arg(Theme::instance()->appNameGUI()));
 }
 
-void SocketApi::command_COPY_LOCAL_LINK(const QString &localFile, SocketListener *)
+void SocketApi::command_COPY_PRIVATE_LINK(const QString &localFile, SocketListener *)
 {
-    auto url = getLocalLinkUrl(localFile);
+    auto url = getPrivateLinkUrl(localFile);
     if (!url.isEmpty()) {
         QApplication::clipboard()->setText(url.toString());
     }
 }
 
-void SocketApi::command_EMAIL_LOCAL_LINK(const QString &localFile, SocketListener *)
+void SocketApi::command_EMAIL_PRIVATE_LINK(const QString &localFile, SocketListener *)
 {
-    auto url = getLocalLinkUrl(localFile);
+    auto url = getPrivateLinkUrl(localFile);
     if (!url.isEmpty()) {
         Utility::openEmailComposer(
             tr("I shared something with you"),
@@ -533,8 +533,8 @@ void SocketApi::command_GET_STRINGS(const QString &, SocketListener *listener)
         { "SHARE_MENU_TITLE", tr("Share with %1...", "parameter is ownCloud").arg(Theme::instance()->appNameGUI()) },
         { "APPNAME", Theme::instance()->appNameGUI() },
         { "CONTEXT_MENU_TITLE", Theme::instance()->appNameGUI() },
-        { "COPY_LOCAL_LINK_TITLE", tr("Copy local link to clipboard") },
-        { "EMAIL_LOCAL_LINK_TITLE", tr("Send local link by email...") },
+        { "COPY_PRIVATE_LINK_TITLE", tr("Copy private link to clipboard") },
+        { "EMAIL_PRIVATE_LINK_TITLE", tr("Send private link by email...") },
     };
     for (auto key_value : map) {
         listener->sendMessage(QString("STRING:%1:%2").arg(key_value.first, key_value.second));
@@ -549,7 +549,7 @@ QString SocketApi::buildRegisterPathMessage(const QString &path)
     return message;
 }
 
-QUrl SocketApi::getLocalLinkUrl(const QString &localFile) const
+QUrl SocketApi::getPrivateLinkUrl(const QString &localFile) const
 {
     Folder *shareFolder = FolderMan::instance()->folderForPath(localFile);
     if (!shareFolder) {

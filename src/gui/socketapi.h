@@ -77,14 +77,14 @@ private:
 
     // The context menu actions
     Q_INVOKABLE void command_SHARE(const QString &localFile, SocketListener *listener);
-    Q_INVOKABLE void command_COPY_LOCAL_LINK(const QString &localFile, SocketListener *listener);
-    Q_INVOKABLE void command_EMAIL_LOCAL_LINK(const QString &localFile, SocketListener *listener);
+    Q_INVOKABLE void command_COPY_PRIVATE_LINK(const QString &localFile, SocketListener *listener);
+    Q_INVOKABLE void command_EMAIL_PRIVATE_LINK(const QString &localFile, SocketListener *listener);
 
     /** Sends translated/branded strings that may be useful to the integration */
     Q_INVOKABLE void command_GET_STRINGS(const QString &argument, SocketListener *listener);
 
     QString buildRegisterPathMessage(const QString &path);
-    QUrl getLocalLinkUrl(const QString &localFile) const;
+    QUrl getPrivateLinkUrl(const QString &localFile) const;
 
     QSet<QString> _registeredAliases;
     QList<SocketListener> _listeners;

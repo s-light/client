@@ -84,7 +84,7 @@ ShareUserGroupWidget::ShareUserGroupWidget(AccountPtr account,
     connect(_manager, SIGNAL(shareCreated(QSharedPointer<Share>)), SLOT(getShares()));
     connect(_manager, SIGNAL(serverError(int, QString)), this, SLOT(displayError(int, QString)));
     connect(_ui->shareeLineEdit, SIGNAL(returnPressed()), SLOT(slotLineEditReturn()));
-    connect(_ui->localLinkText, SIGNAL(linkActivated(QString)), SLOT(slotLocalLinkShare()));
+    connect(_ui->privateLinkText, SIGNAL(linkActivated(QString)), SLOT(slotPrivateLinkShare()));
 
     // By making the next two QueuedConnections we can override
     // the strings the completer sets on the line edit.
@@ -227,17 +227,17 @@ void ShareUserGroupWidget::slotAdjustScrollWidgetSize()
     }
 }
 
-void ShareUserGroupWidget::slotLocalLinkShare()
+void ShareUserGroupWidget::slotPrivateLinkShare()
 {
     auto menu = new QMenu(this);
     menu->setAttribute(Qt::WA_DeleteOnClose);
 
     menu->addAction(tr("Open link in browser"),
-        this, SLOT(slotLocalLinkOpenBrowser()));
+        this, SLOT(slotPrivateLinkOpenBrowser()));
     menu->addAction(tr("Copy link to clipboard"),
-        this, SLOT(slotLocalLinkCopy()));
+        this, SLOT(slotPrivateLinkCopy()));
     menu->addAction(tr("Send link by email"),
-        this, SLOT(slotLocalLinkEmail()));
+        this, SLOT(slotPrivateLinkEmail()));
 
     menu->exec(QCursor::pos());
 }
@@ -321,17 +321,17 @@ void ShareUserGroupWidget::displayError(int code, const QString &message)
     _ui->shareeLineEdit->setEnabled(true);
 }
 
-void ShareUserGroupWidget::slotLocalLinkOpenBrowser()
+void ShareUserGroupWidget::slotPrivateLinkOpenBrowser()
 {
     Utility::openBrowser(_account->filePermalinkUrl(_fileIdLocal), this);
 }
 
-void ShareUserGroupWidget::slotLocalLinkCopy()
+void ShareUserGroupWidget::slotPrivateLinkCopy()
 {
     QApplication::clipboard()->setText(_account->filePermalinkUrl(_fileIdLocal).toString());
 }
 
-void ShareUserGroupWidget::slotLocalLinkEmail()
+void ShareUserGroupWidget::slotPrivateLinkEmail()
 {
     Utility::openEmailComposer(
         tr("I shared something with you"),

@@ -76,12 +76,12 @@ private slots:
     void slotCompleterHighlighted(const QModelIndex &index);
     void slotShareesReady();
     void slotAdjustScrollWidgetSize();
-    void slotLocalLinkShare();
+    void slotPrivateLinkShare();
     void displayError(int code, const QString &message);
 
-    void slotLocalLinkOpenBrowser();
-    void slotLocalLinkCopy();
-    void slotLocalLinkEmail();
+    void slotPrivateLinkOpenBrowser();
+    void slotPrivateLinkCopy();
+    void slotPrivateLinkEmail();
 
 private:
     Ui::ShareUserGroupWidget *_ui;

@@ -64,17 +64,17 @@ public:
             helper->sendCommand(QByteArray("SHARE:"+localFile.toUtf8()+"\n"));
         } );
 
-        if (!helper->contextMenuTitle().isEmpty()) {
-            auto copyLocalLinkAction = menu->addAction(helper->copyLocalLinkTitle());
-            connect(copyLocalLinkAction, &QAction::triggered, this, [localFile, helper] {
-                helper->sendCommand(QByteArray("COPY_LOCAL_LINK:"+localFile.toUtf8()+"\n"));
+        if (!helper->copyPrivateLinkTitle().isEmpty()) {
+            auto copyPrivateLinkAction = menu->addAction(helper->copyPrivateLinkTitle());
+            connect(copyPrivateLinkAction, &QAction::triggered, this, [localFile, helper] {
+                helper->sendCommand(QByteArray("COPY_PRIVATE_LINK:" + localFile.toUtf8() + "\n"));
             });
         }
 
-        if (!helper->emailLocalLinkTitle().isEmpty()) {
-            auto emailLocalLinkAction = menu->addAction(helper->emailLocalLinkTitle());
-            connect(emailLocalLinkAction, &QAction::triggered, this, [localFile, helper] {
-                helper->sendCommand(QByteArray("EMAIL_LOCAL_LINK:"+localFile.toUtf8()+"\n"));
+        if (!helper->emailPrivateLinkTitle().isEmpty()) {
+            auto emailPrivateLinkAction = menu->addAction(helper->emailPrivateLinkTitle());
+            connect(emailPrivateLinkAction, &QAction::triggered, this, [localFile, helper] {
+                helper->sendCommand(QByteArray("EMAIL_PRIVATE_LINK:" + localFile.toUtf8() + "\n"));
             });
         }
 

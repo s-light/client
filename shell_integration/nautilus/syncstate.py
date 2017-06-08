@@ -205,7 +205,7 @@ class MenuExtension(GObject.GObject, Nautilus.MenuProvider):
         if not entry:
             return []
 
-        # Currently 'sharable' also controls access to local link actions,
+        # Currently 'sharable' also controls access to private link actions,
         # and we definitely don't want to show them for IGNORED.
         shareable = False
         state = entry['state']
@@ -240,17 +240,17 @@ class MenuExtension(GObject.GObject, Nautilus.MenuProvider):
 
         # Add permalink menu options, but hide these options for older clients
         # that don't have these actions.
-        if 'COPY_LOCAL_LINK_TITLE' in self.strings:
-            item_copylocallink = Nautilus.MenuItem(
-                name='CopyLocalLink', label=self.strings.get('COPY_LOCAL_LINK_TITLE', 'Copy local link to clipboard'))
-            item_copylocallink.connect("activate", self.context_menu_action, 'COPY_LOCAL_LINK', file)
-            menu.append_item(item_copylocallink)
+        if 'COPY_PRIVATE_LINK_TITLE' in self.strings:
+            item_copyprivatelink = Nautilus.MenuItem(
+                name='CopyPrivateLink', label=self.strings.get('COPY_PRIVATE_LINK_TITLE', 'Copy private link to clipboard'))
+            item_copyprivatelink.connect("activate", self.context_menu_action, 'COPY_PRIVATE_LINK', file)
+            menu.append_item(item_copyprivatelink)
 
-        if 'EMAIL_LOCAL_LINK_TITLE' in self.strings:
-            item_emaillocallink = Nautilus.MenuItem(
-                name='EmailLocalLink', label=self.strings.get('EMAIL_LOCAL_LINK_TITLE', 'Send local link by email...'))
-            item_emaillocallink.connect("activate", self.context_menu_action, 'EMAIL_LOCAL_LINK', file)
-            menu.append_item(item_emaillocallink)
+        if 'EMAIL_PRIVATE_LINK_TITLE' in self.strings:
+            item_emailprivatelink = Nautilus.MenuItem(
+                name='EmailPrivateLink', label=self.strings.get('EMAIL_PRIVATE_LINK_TITLE', 'Send private link by email...'))
+            item_emailprivatelink.connect("activate", self.context_menu_action, 'EMAIL_PRIVATE_LINK', file)
+            menu.append_item(item_emailprivatelink)
 
         return [item_owncloud]
 
