@@ -57,7 +57,7 @@ public:
         const QString &sharePath,
         const QString &localPath,
         SharePermissions maxSharingPermissions,
-        const QByteArray &fileIdLocal,
+        const QByteArray &numericFileId,
         QWidget *parent = 0);
     ~ShareUserGroupWidget();
 
@@ -89,7 +89,7 @@ private:
     QString _sharePath;
     QString _localPath;
     SharePermissions _maxSharingPermissions;
-    QByteArray _fileIdLocal;
+    QByteArray _numericFileId;
 
     QCompleter *_completer;
     ShareeModel *_completerModel;

@@ -108,7 +108,7 @@ public:
     QUrl davUrl() const;
 
     /** Returns a permalink url for a file */
-    QUrl filePermalinkUrl(const QByteArray &fileIdLocal) const;
+    QUrl filePermalinkUrl(const QByteArray &numericFileId) const;
 
     /** Holds the accounts credentials */
     AbstractCredentials *credentials() const;

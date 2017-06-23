@@ -562,7 +562,7 @@ QUrl SocketApi::getPrivateLinkUrl(const QString &localFile) const
 
     SyncJournalFileRecord rec = shareFolder->journalDb()->getFileRecord(file);
     if (rec.isValid()) {
-        return shareFolder->accountState()->account()->filePermalinkUrl(rec._fileIdLocal);
+        return shareFolder->accountState()->account()->filePermalinkUrl(rec.numericFileId());
     }
     return QUrl();
 }
