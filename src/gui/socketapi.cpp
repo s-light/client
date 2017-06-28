@@ -34,6 +34,7 @@
 #include "asserts.h"
 #include "guiutility.h"
 
+#include <array>
 #include <QBitArray>
 #include <QUrl>
 #include <QMetaMethod>
@@ -529,14 +530,14 @@ void SocketApi::command_EMAIL_PRIVATE_LINK(const QString &localFile, SocketListe
 
 void SocketApi::command_GET_STRINGS(const QString &, SocketListener *listener)
 {
-    static auto map = std::initializer_list<std::pair<const char *, QString>>{
+    static std::array<std::pair<const char *, QString>, 5> strings { {
         { "SHARE_MENU_TITLE", tr("Share with %1...", "parameter is ownCloud").arg(Theme::instance()->appNameGUI()) },
         { "APPNAME", Theme::instance()->appNameGUI() },
         { "CONTEXT_MENU_TITLE", Theme::instance()->appNameGUI() },
         { "COPY_PRIVATE_LINK_TITLE", tr("Copy private link to clipboard") },
         { "EMAIL_PRIVATE_LINK_TITLE", tr("Send private link by email...") },
-    };
-    for (auto key_value : map) {
+    } };
+    for (auto key_value : strings) {
         listener->sendMessage(QString("STRING:%1:%2").arg(key_value.first, key_value.second));
     }
 }
