@@ -35,12 +35,22 @@ repositories`_ to see all the Linux client repos.
    package=owncloud-client>`_ is a "Grab binary packages directly" section. 
    These contain source RPMs for CentOS, RHEL, Fedora, SLES, and openSUSE. 
    
-   To get the .deb source packages add the source 
-   repo for your Debian or Ubuntu version, like this example for Debian 8 
-   (run as root)::
- 
-    echo 'deb-src 
-    http://download.opensuse.org/repositories/isv:/ownCloud:/desktop/Debian_8.0/ /' >> /etc/apt/sources.list.d/owncloud-client.list
+   For Debian and Ubuntu you can add the source repo to your software sources list to get access to the .deb source package -
+   copy the command for the installation and change 'deb' to 'deb-src':
+
+   Example for Debian 8::
+    
+    # original installation instructions from OBS
+    sudo sh -c "echo 'deb     http://download.opensuse.org/repositories/isv:/ownCloud:/desktop/Debian_8.0/ /' > /etc/apt/sources.list.d/owncloud-client.list"
+    # modified to add source repo
+    sudo sh -c "echo 'deb-src http://download.opensuse.org/repositories/isv:/ownCloud:/desktop/Debian_8.0/ /' > /etc/apt/sources.list.d/owncloud-client.list"
+
+   Example for Ubuntu 17.04::
+
+    # original installation instructions from OBS
+    sudo sh -c "echo 'deb     http://download.opensuse.org/repositories/isv:/ownCloud:/desktop/Ubuntu_17.04/ /' > /etc/apt/sources.list.d/owncloud-client.list"
+    # modified to add source repo
+    sudo sh -c "echo 'deb-src http://download.opensuse.org/repositories/isv:/ownCloud:/desktop/Ubuntu_17.04/ /' > /etc/apt/sources.list.d/owncloud-client.list"
 
 2. Install the dependencies using the following commands for your specific Linux 
 distribution. Make sure the repositories for source packages are enabled.
